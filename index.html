@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ULTIMATE FUN HUB</title>
+  <style>
+    body {
+      margin:0;
+      font-family:sans-serif;
+      text-align:center;
+      background:#111;
+      color:white;
+    }
+    button {
+      padding:12px;
+      margin:8px;
+      font-size:16px;
+      cursor:pointer;
+    }
+    .game { display:none; height:100vh; }
+    .back { position:fixed; top:10px; left:10px; }
+  </style>
+</head>
+
+<body>
+
+<h1 id="menu">🎮 ULTIMATE FUN HUB</h1>
+
+<div id="buttons">
+  <button onclick="start('reaction')">⏱ Reaktion</button>
+  <button onclick="start('clicker')">🎮 Klick</button>
+  <button onclick="start('dice')">🎲 Würfel</button>
+  <button onclick="start('coin')">🪙 Münze</button>
+  <button onclick="start('emoji')">😂 Emoji</button>
+  <button onclick="start('target')">🎯 Ziel</button>
+  <button onclick="start('farbe')">🎨 Farben</button>
+  <button onclick="start('spruch')">😂 Sprüche</button>
+  <button onclick="start('tier')">🐱 Tier</button>
+  <button onclick="start('troll')">😈 Troll Game</button>
+</div>
+
+<button class="back" onclick="back()" style="display:none;">⬅ Zurück</button>
+
+<!-- REAKTION -->
+<div id="reaction" class="game">
+  <h1>⏱ Reaktion</h1>
+  <div id="box" style="width:200px;height:200px;background:red;margin:auto;"></div>
+  <p id="reactText"></p>
+</div>
+
+<!-- CLICK -->
+<div id="clicker" class="game">
+  <h1>🎮 Klick Spiel</h1>
+  <p>Klicks: <span id="count">0</span></p>
+  <button onclick="clickGame()">KLICK!</button>
+</div>
+
+<!-- WÜRFEL -->
+<div id="dice" class="game">
+  <h1>🎲 Würfel</h1>
+  <p id="diceRes">?</p>
+  <button onclick="roll()">Würfeln</button>
+</div>
+
+<!-- MÜNZE -->
+<div id="coin" class="game">
+  <h1>🪙 Münze</h1>
+  <p id="coinRes">?</p>
+  <button onclick="flip()">Werfen</button>
+</div>
+
+<!-- EMOJI -->
+<div id="emoji" class="game">
+  <h1>😂 Emoji</h1>
+  <p id="emojiRes" style="font-size:60px;">😀</p>
+  <button onclick="emoji()">Neu</button>
+</div>
+
+<!-- ZIEL -->
+<div id="target" class="game">
+  <h1>🎯 Ziel</h1>
+  <p>Punkte: <span id="score">0</span></p>
+  <div id="targetBox" style="width:50px;height:50px;background:red;position:absolute;"></div>
+</div>
+
+<!-- FARBE -->
+<div id="farbe" class="game">
+  <h1>🎨 Farben</h1>
+  <button onclick="farbe()">Farbe ändern</button>
+</div>
+
+<!-- SPRUCH -->
+<div id="spruch" class="game">
+  <h1>😂 Sprüche</h1>
+  <p id="spruchText">Klick!</p>
+  <button onclick="spruch()">Neu</button>
+</div>
+
+<!-- TIER -->
+<div id="tier" class="game">
+  <h1>🐱 Tier</h1>
+  <img id="img" width="300"><br>
+  <button onclick="tier()">Neu</button>
+</div>
+
+<!-- TROLL -->
+<div id="troll" class="game">
+  <h1>😈 Troll Game Level <span id="lvl">1</span></h1>
+  <button id="tBtn" style="position:absolute;">Klick mich!</button>
+  <p id="tText"></p>
+</div>
+
+<script>
+let current=null;
+
+// Menü
+function start(id){
+  menu.style.display="none";
+  buttons.style.display="none";
+  document.querySelector(".back").style.display="block";
+  document.getElementById(id).style.display="block";
+  current=id;
+
+  if(id==="reaction") reactionStart();
+  if(id==="target") moveTarget();
+  if(id==="tier") tier();
+}
+
+function back(){
+  document.getElementById(current).style.display="none";
+  menu.style.display="block";
+  buttons.style.display="block";
+  document.querySelector(".back").style.display="none";
+}
+
+// REAKTION
+function reactionStart(){
+  let box=document.getElementById("box");
+  let text=document.getElementById("reactText");
+  box.style.background="red";
+  text.innerText="Warte...";
+
+  let start;
+  setTimeout(()=>{
+    box.style.background="green";
+    start=Date.now();
+    box.onclick=()=>{
+      text.innerText=(Date.now()-start)+" ms";
+    };
+  },Math.random()*3000+1000);
+}
+
+// CLICK
+let c=0;
+function clickGame(){
+  c++;
+  count.innerText=c;
+}
+
+// WÜRFEL
+function roll(){
+  diceRes.innerText=Math.floor(Math.random()*6)+1;
+}
+
+// MÜNZE
+function flip(){
+  coinRes.innerText=Math.random()<0.5?"Kopf":"Zahl";
+}
+
+// EMOJI
+const emojis=["😂","😎","🔥","🤯","👻","🤡"];
+function emoji(){
+  emojiRes.innerText=emojis[Math.floor(Math.random()*emojis.length)];
+}
+
+// ZIEL
+let score=0;
+const target=document.getElementById("targetBox");
+target.onclick=()=>{
+  score++;
+  document.getElementById("score").innerText=score;
+  moveTarget();
+};
+
+function moveTarget(){
+  target.style.left=Math.random()*window.innerWidth+"px";
+  target.style.top=Math.random()*window.innerHeight+"px";
+}
+
+// FARBE
+function farbe(){
+  document.body.style.background=
+  "#"+Math.floor(Math.random()*16777215).toString(16);
+}
+
+// SPRUCH
+const sprueche=["Ich bin faul 😴","Montag sucks 😭","Urlaub pls 😂"];
+function spruch(){
+  spruchText.innerText=sprueche[Math.floor(Math.random()*sprueche.length)];
+}
+
+// TIER
+function tier(){
+  fetch("https://api.thecatapi.com/v1/images/search")
+  .then(r=>r.json())
+  .then(d=>img.src=d[0].url);
+}
+
+// TROLL GAME 😈
+let lvl=1;
+const tBtn=document.getElementById("tBtn");
+const tText=document.getElementById("tText");
+
+function move(){
+  tBtn.style.left=Math.random()*window.innerWidth+"px";
+  tBtn.style.top=Math.random()*window.innerHeight+"px";
+}
+
+tBtn.onmouseover=move;
+
+tBtn.onclick=()=>{
+  lvl++;
+  document.getElementById("lvl").innerText=lvl;
+
+  if(lvl==2){ tText.innerText="Schneller 😈"; }
+  if(lvl==3){ tBtn.style.transform="scale(0.6)"; }
+  if(lvl==4){ setInterval(move,300); }
+  if(lvl==5){ tBtn.style.opacity="0.2"; }
+  if(lvl==6){ tText.innerText="CHAOS 🤯"; setInterval(move,100); }
+
+  move();
+};
+
+move();
+</script>
+
+</body>
+</html>
